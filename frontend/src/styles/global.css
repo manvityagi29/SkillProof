@@ -179,12 +179,15 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   background: var(--color-surface-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-large);
-  box-shadow: var(--shadow-raised);
+  box-shadow: var(--shadow-card);
   padding: var(--space-300);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  position: relative;
 }
 .card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow-hover);
+  border-color: #CBD5E1;
 }
 .card-sunken {
   background: var(--color-surface-sunken);
@@ -198,21 +201,22 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   font-size: var(--font-size-500);
   font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
 }
 .section-title {
   font-size: var(--font-size-300);
   font-weight: 700;
   color: var(--color-text);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.015em;
 }
-.text-subtle { color: var(--color-text-subtle); font-size: var(--font-size-200); }
+.text-subtle { color: var(--color-text-subtle); font-size: var(--font-size-200); line-height: 1.5; }
 .text-subtlest { color: var(--color-text-subtlest); font-size: var(--font-size-100); }
 .stat-number {
   font-size: var(--font-size-600);
   font-weight: 800;
   color: var(--color-text);
-  letter-spacing: -0.03em;
+  letter-spacing: -0.035em;
   line-height: 1.1;
 }
 
@@ -229,19 +233,21 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   font-size: var(--font-size-200);
   cursor: pointer;
   justify-content: center;
-  transition: all 0.15s ease;
-  line-height: 1.2;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+  line-height: 1.3;
 }
 .btn:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 .btn-primary {
-  background: var(--color-brand-bold);
+  background: var(--color-brand-gradient);
   color: var(--color-text-inverse);
-  box-shadow: 0 1px 2px rgba(12, 102, 228, 0.2);
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.25);
 }
 .btn-primary:hover {
-  background: var(--color-brand-bolder);
+  filter: brightness(1.08);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
 }
 .btn-secondary {
   background: var(--color-surface);
@@ -252,6 +258,7 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 .btn-secondary:hover {
   background: var(--color-surface-hovered);
   border-color: var(--color-border-bold);
+  transform: translateY(-1px);
 }
 .btn-danger {
   background: var(--color-danger-subtle);
@@ -300,38 +307,38 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
 /* ---------- Skill bar (Skill Passport widget) ---------- */
 .skill-bar-track {
   height: 10px;
-  background: var(--color-surface-hovered);
+  background: #E2E8F0;
   border-radius: var(--radius-pill);
   overflow: hidden;
-  border: 1px solid var(--color-border);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
 }
 .skill-bar-fill {
   height: 100%;
   border-radius: var(--radius-pill);
-  background: var(--color-brand-bold);
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.skill-bar-fill.status-highly_verified { background: linear-gradient(90deg, #1F845A, #28A745); }
-.skill-bar-fill.status-verified { background: linear-gradient(90deg, #0C66E4, #388BFF); }
-.skill-bar-fill.status-developing { background: linear-gradient(90deg, #B65C02, #FFAB00); }
-.skill-bar-fill.status-unverified { background: var(--color-danger-bold); }
+.skill-bar-fill.status-highly_verified { background: linear-gradient(90deg, #059669, #10B981); box-shadow: 0 0 8px rgba(16, 185, 129, 0.4); }
+.skill-bar-fill.status-verified { background: linear-gradient(90deg, #2563EB, #3B82F6); box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+.skill-bar-fill.status-developing { background: linear-gradient(90deg, #D97706, #F59E0B); }
+.skill-bar-fill.status-unverified { background: linear-gradient(90deg, #DC2626, #EF4444); }
 
 /* ---------- Forms ---------- */
 .field { display: grid; gap: var(--space-050); }
 .field label { font-weight: 600; font-size: var(--font-size-100); color: var(--color-text-subtle); text-transform: uppercase; letter-spacing: 0.03em; }
 .field input, .field select, .field textarea {
   padding: 10px var(--space-150);
-  border: 1px solid var(--color-border-bold);
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-small);
   color: var(--color-text);
   background: var(--color-surface);
   font-size: var(--font-size-200);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  transition: all 0.15s ease;
+  box-shadow: var(--shadow-sm);
 }
 .field input:focus, .field select:focus, .field textarea:focus {
   outline: none;
   border-color: var(--color-brand-bold);
-  box-shadow: 0 0 0 3px var(--color-brand-subtle);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
 }
 .form-grid { display: grid; grid-template-columns: 1fr; gap: var(--space-200); }
 

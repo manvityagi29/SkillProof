@@ -1,36 +1,39 @@
-/* Atlassian & Linear inspired design tokens
-   Crafted for pure CSS Grid layouts with 0 flexbox. */
+/* Modern SaaS Design Tokens
+   Crafted strictly for pure CSS Grid layouts with 0 flexbox. */
 :root {
-  --color-brand-bold: #0C66E4;
-  --color-brand-bolder: #0055CC;
-  --color-brand-subtle: #E9F2FF;
-  --color-brand-accent: #388BFF;
+  --color-brand-bold: #2563EB;
+  --color-brand-bolder: #1D4ED8;
+  --color-brand-subtle: #EFF6FF;
+  --color-brand-accent: #3B82F6;
+  --color-brand-gradient: linear-gradient(135deg, #2563EB 0%, #4F46E5 100%);
+  --color-brand-glow: rgba(37, 99, 235, 0.15);
 
-  --color-text: #091E42;
-  --color-text-subtle: #44546F;
-  --color-text-subtlest: #626F86;
+  --color-text: #0F172A;
+  --color-text-subtle: #475569;
+  --color-text-subtlest: #64748B;
   --color-text-inverse: #FFFFFF;
   
-  --color-border: #DCDFE4;
-  --color-border-bold: #8590A2;
-  --color-border-focus: #0C66E4;
+  --color-border: #E2E8F0;
+  --color-border-subtle: #F1F5F9;
+  --color-border-bold: #94A3B8;
+  --color-border-focus: #2563EB;
   
   --color-surface: #FFFFFF;
-  --color-surface-sunken: #F7F8F9;
+  --color-surface-sunken: #F8FAFC;
   --color-surface-raised: #FFFFFF;
-  --color-surface-hovered: #F1F2F4;
+  --color-surface-hovered: #F1F5F9;
   --color-surface-card: #FFFFFF;
 
-  --color-success-bold: #1F845A;
-  --color-success-subtle: #DCFFF1;
-  --color-warning-bold: #B65C02;
-  --color-warning-subtle: #FFF7D6;
-  --color-danger-bold: #C9372C;
-  --color-danger-subtle: #FFECEB;
-  --color-info-bold: #0C66E4;
-  --color-info-subtle: #E9F2FF;
-  --color-discovery-bold: #6E5DC6;
-  --color-discovery-subtle: #F3F0FD;
+  --color-success-bold: #059669;
+  --color-success-subtle: #ECFDF5;
+  --color-warning-bold: #D97706;
+  --color-warning-subtle: #FFFBEB;
+  --color-danger-bold: #DC2626;
+  --color-danger-subtle: #FEF2F2;
+  --color-info-bold: #0284C7;
+  --color-info-subtle: #F0F9FF;
+  --color-discovery-bold: #7C3AED;
+  --color-discovery-subtle: #F5F3FF;
 
   --space-025: 2px;
   --space-050: 4px;
@@ -43,15 +46,16 @@
   --space-500: 40px;
   --space-600: 48px;
 
-  --radius-small: 4px;
-  --radius-medium: 10px;
-  --radius-large: 14px;
+  --radius-small: 6px;
+  --radius-medium: 12px;
+  --radius-large: 18px;
   --radius-pill: 9999px;
 
-  --shadow-sm: 0 1px 2px 0 rgba(9, 30, 66, 0.08);
-  --shadow-raised: 0 1px 3px rgba(9, 30, 66, 0.08), 0 0 1px rgba(9, 30, 66, 0.15);
-  --shadow-hover: 0 8px 16px -2px rgba(9, 30, 66, 0.1), 0 2px 4px -1px rgba(9, 30, 66, 0.06);
-  --shadow-overlay: 0 12px 24px -4px rgba(9, 30, 66, 0.18), 0 4px 8px -2px rgba(9, 30, 66, 0.08);
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+  --shadow-raised: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-hover: 0 12px 20px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.03);
+  --shadow-card: 0 1px 3px 0 rgba(15, 23, 42, 0.05), 0 1px 2px -1px rgba(15, 23, 42, 0.05);
+  --shadow-overlay: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
 
   --font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
   --font-size-050: 11px;
@@ -59,8 +63,7 @@
   --font-size-150: 13px;
   --font-size-200: 14px;
   --font-size-300: 16px;
-  --font-size-400: 19px;
-  --font-size-500: 24px;
-  --font-size-600: 30px;
+  --font-size-400: 18px;
+  --font-size-500: 22px;
+  --font-size-600: 28px;
 }
-
