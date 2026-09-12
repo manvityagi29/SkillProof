@@ -1,8 +1,25 @@
 import { Router } from 'express';
 import { pool } from '../db/pool';
 import { requireAuth, requireRole } from '../middleware/auth';
+import { analyzeCodeQuality } from '../services/ml.service';
 
 const router = Router();
+
+async function attachMlAnalysis(rows: any[]) {
+  return await Promise.all(
+    rows.map(async (row) => {
+      if (row.code_submission && typeof row.code_submission === 'string' && row.code_submission.trim().length > 0) {
+        try {
+          const ml = await analyzeCodeQuality(row.code_submission);
+          return { ...row, ml_analysis: ml };
+        } catch {
+          return row;
+        }
+      }
+      return row;
+    })
+  );
+}
 
 router.get('/prompts/:skillId', requireAuth, async (req, res) => {
   const result = await pool.query(
@@ -74,7 +91,8 @@ router.get('/team/:teamId', requireAuth, requireRole('captain'), async (req, res
      WHERE c.team_id = $1 ORDER BY c.created_at DESC`,
     [req.params.teamId]
   );
-  res.json(result.rows);
+  const enriched = await attachMlAnalysis(result.rows);
+  res.json(enriched);
 });
 
 // GET /api/challenges - list challenges based on user role
@@ -93,7 +111,8 @@ router.get('/', requireAuth, async (req, res) => {
        WHERE t.captain_id = $1 ORDER BY c.created_at DESC`,
       [req.user!.userId]
     );
-    return res.json(result.rows);
+    const enriched = await attachMlAnalysis(result.rows);
+    return res.json(enriched);
   }
 
   const result = await pool.query(

@@ -26,6 +26,17 @@ interface ChallengeItem {
   candidate_name: string;
   skill_name: string;
   team_name: string;
+  ml_analysis?: {
+    predictedQualityScore: number;
+    maintainability: string;
+    metrics: {
+      astDepth: number;
+      cyclomaticComplexity: number;
+      tokenDiversity: number;
+      linesOfCode: number;
+      avgIdentifierLength: number;
+    };
+  };
 }
 
 export function ChallengeReviewPage() {
@@ -135,6 +146,63 @@ export function ChallengeReviewPage() {
                 </div>
               ) : (
                 <span className="text-subtle">Candidate has not submitted code yet.</span>
+              )}
+
+              {/* ML Code Intelligence Card (Scikit-Learn Gradient Boosting) */}
+              {c.ml_analysis && (
+                <div className="card-sunken stack-150" style={{ border: '1px solid rgba(110, 93, 198, 0.3)', background: 'linear-gradient(180deg, rgba(110, 93, 198, 0.05) 0%, var(--color-surface-sunken) 100%)' }}>
+                  <div className="cluster-between">
+                    <div className="cluster-100">
+                      <span style={{ fontSize: '20px' }}>🤖</span>
+                      <div style={{ display: 'grid' }}>
+                        <span style={{ fontWeight: 700, color: 'var(--color-discovery-bold)' }}>
+                          ML Code Intelligence (Gradient Boosting Regressor)
+                        </span>
+                        <span className="text-subtlest">Abstract Syntax Tree & Complexity Analysis</span>
+                      </div>
+                    </div>
+                    <Badge tone={c.ml_analysis.predictedQualityScore >= 80 ? 'success' : c.ml_analysis.predictedQualityScore >= 65 ? 'brand' : 'warning'}>
+                      Predicted Quality: {c.ml_analysis.predictedQualityScore}% ({c.ml_analysis.maintainability})
+                    </Badge>
+                  </div>
+
+                  <div className="grid-4" style={{ fontSize: 'var(--font-size-100)' }}>
+                    <div style={{ display: 'grid', gap: '2px' }}>
+                      <span className="text-subtlest">AST NESTING DEPTH</span>
+                      <span style={{ fontWeight: 700 }}>{c.ml_analysis.metrics.astDepth} levels</span>
+                    </div>
+                    <div style={{ display: 'grid', gap: '2px' }}>
+                      <span className="text-subtlest">CYCLOMATIC BRANCHES</span>
+                      <span style={{ fontWeight: 700 }}>{c.ml_analysis.metrics.cyclomaticComplexity} paths</span>
+                    </div>
+                    <div style={{ display: 'grid', gap: '2px' }}>
+                      <span className="text-subtlest">TOKEN DIVERSITY</span>
+                      <span style={{ fontWeight: 700 }}>{Math.round(c.ml_analysis.metrics.tokenDiversity * 100)}%</span>
+                    </div>
+                    <div style={{ display: 'grid', gap: '2px' }}>
+                      <span className="text-subtlest">AVG IDENTIFIER LEN</span>
+                      <span style={{ fontWeight: 700 }}>{c.ml_analysis.metrics.avgIdentifierLength} chars</span>
+                    </div>
+                  </div>
+
+                  {c.status === 'submitted' && (
+                    <div className="cluster-between" style={{ paddingTop: 'var(--space-050)' }}>
+                      <span className="text-subtlest">
+                        Save time: Apply the ML model's baseline scores to your rubric inputs below.
+                      </span>
+                      <Button
+                        variant="secondary"
+                        onClick={() => {
+                          const suggested = c.ml_analysis!.predictedQualityScore;
+                          updateField(c.id, 'codeQuality', suggested);
+                          updateField(c.id, 'problemSolving', Math.min(100, Math.max(50, suggested + 5)));
+                        }}
+                      >
+                        Apply ML Suggestion ({c.ml_analysis.predictedQualityScore}%)
+                      </Button>
+                    </div>
+                  )}
+                </div>
               )}
 
               {/* Human Rubric Review Form */}

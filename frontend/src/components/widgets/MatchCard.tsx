@@ -37,6 +37,24 @@ export function MatchCard({
         </span>
       </div>
 
+      {/* ML Team Synergy Predictor (Scikit-Learn Random Forest) */}
+      {match.synergyScore !== undefined && (
+        <div className="cluster-between" style={{ background: 'var(--color-brand-subtle)', padding: 'var(--space-100)', borderRadius: 'var(--radius-small)', border: '1px solid rgba(12, 102, 228, 0.2)' }}>
+          <div className="cluster-100">
+            <span style={{ fontSize: '18px' }}>🤖</span>
+            <div style={{ display: 'grid' }}>
+              <span style={{ fontWeight: 700, fontSize: 'var(--font-size-100)', color: 'var(--color-brand-bolder)' }}>
+                ML PREDICTED SYNERGY: {match.synergyScore}%
+              </span>
+              <span className="text-subtlest">Random Forest Multi-Factor Synergy</span>
+            </div>
+          </div>
+          <Badge tone={match.synergyScore >= 80 ? 'success' : match.synergyScore >= 60 ? 'brand' : 'neutral'}>
+            {match.synergyLabel || 'Compatible'}
+          </Badge>
+        </div>
+      )}
+
       {/* Matched Required Skills */}
       <div className="stack-050">
         <span style={{ fontWeight: 600, fontSize: 'var(--font-size-100)', color: 'var(--color-success-bold)' }}>

@@ -1,4 +1,5 @@
 import { pool } from '../db/pool';
+import { predictTeamSynergy } from './ml.service';
 
 export interface SkillRequirement {
   skillId: number;
@@ -12,16 +13,20 @@ export interface CandidateMatch {
   college: string | null;
   matchPercent: number;
   skillBreakdown: Array<{ skillName: string; verificationScore: number; isTeamGap: boolean }>;
+  synergyScore?: number;
+  synergyLabel?: string;
 }
 
 /**
  * Match % = weighted average of (candidate's verified score for each required skill),
  * where a skill the team is currently missing entirely counts at full weight and a
- * skill the team already has covered counts at half weight. This is the "find the
- * candidate the team needs, not just the best individual" logic from the PRD,
- * expressed as one explainable rule instead of a four-factor formula.
+ * skill the team already has covered counts at half weight.
+ * Enriched with Scikit-Learn Random Forest predicted Team Synergy.
  */
 export async function rankCandidatesForTeam(teamId: number): Promise<CandidateMatch[]> {
+  const teamRes = await pool.query(`SELECT max_members FROM teams WHERE id=$1`, [teamId]);
+  const maxMembers = teamRes.rows[0]?.max_members || 4;
+
   const requirements = await pool.query(
     `SELECT tr.skill_id, s.name AS skill_name, tr.importance
      FROM team_requirements tr JOIN skills s ON s.id = tr.skill_id
@@ -39,10 +44,25 @@ export async function rankCandidatesForTeam(teamId: number): Promise<CandidateMa
     [teamId]
   );
   const gapMap = new Map<number, boolean>();
-  coverage.rows.forEach((r) => gapMap.set(r.skill_id, !r.covered));
+  let totalGaps = 0;
+  coverage.rows.forEach((r) => {
+    const isGap = !r.covered;
+    gapMap.set(r.skill_id, isGap);
+    if (isGap) totalGaps++;
+  });
 
-  const existingMemberIds = await pool.query(`SELECT user_id FROM team_members WHERE team_id=$1`, [teamId]);
-  const excludeIds = existingMemberIds.rows.map((r) => r.user_id);
+  const existingMembers = await pool.query(
+    `SELECT tm.user_id, COALESCE(AVG(us.verification_score), 70) as avg_score
+     FROM team_members tm
+     LEFT JOIN user_skills us ON us.user_id = tm.user_id
+     WHERE tm.team_id=$1 AND tm.status='accepted'
+     GROUP BY tm.user_id`,
+    [teamId]
+  );
+  const excludeIds = existingMembers.rows.map((r) => r.user_id);
+  const teamAvgScore = existingMembers.rows.length > 0
+    ? Number((existingMembers.rows.reduce((sum, m) => sum + Number(m.avg_score), 0) / existingMembers.rows.length).toFixed(1))
+    : 72.0;
 
   const candidates = await pool.query(
     `SELECT id, name, college FROM users WHERE role = 'candidate' ${excludeIds.length ? 'AND id != ALL($1)' : ''}`,
@@ -53,21 +73,48 @@ export async function rankCandidatesForTeam(teamId: number): Promise<CandidateMa
   for (const candidate of candidates.rows) {
     let weightedSum = 0;
     let weightTotal = 0;
+    let gapsFilled = 0;
+    let candidateScoreSum = 0;
     const breakdown = [];
+
     for (const req of requirements.rows) {
       const skillRes = await pool.query(
         `SELECT verification_score FROM user_skills WHERE user_id=$1 AND skill_id=$2`,
         [candidate.id, req.skill_id]
       );
       const score = skillRes.rows[0] ? Number(skillRes.rows[0].verification_score) : 0;
+      candidateScoreSum += score;
       const isGap = gapMap.get(req.skill_id) ?? true;
+      if (isGap && score >= 60) gapsFilled++;
       const weight = (req.importance || 3) * (isGap ? 1 : 0.5);
       weightedSum += score * weight;
       weightTotal += weight;
       breakdown.push({ skillName: req.skill_name, verificationScore: score, isTeamGap: isGap });
     }
+
     const matchPercent = weightTotal > 0 ? Number((weightedSum / weightTotal).toFixed(1)) : 0;
-    results.push({ userId: candidate.id, name: candidate.name, college: candidate.college, matchPercent, skillBreakdown: breakdown });
+    const candAvgScore = requirements.rows.length > 0 ? candidateScoreSum / requirements.rows.length : 65.0;
+    const gapFillRatio = totalGaps > 0 ? gapsFilled / totalGaps : 0.5;
+    const skillOverlapRatio = totalGaps > 0 ? (requirements.rows.length - totalGaps) / requirements.rows.length : 0.2;
+    const rosterFullness = Math.min(1.0, existingMembers.rows.length / maxMembers);
+
+    const synergy = await predictTeamSynergy({
+      gapFillRatio,
+      candidateAvgScore: candAvgScore,
+      teamAvgScore,
+      skillOverlapRatio,
+      rosterFullness
+    });
+
+    results.push({
+      userId: candidate.id,
+      name: candidate.name,
+      college: candidate.college,
+      matchPercent,
+      skillBreakdown: breakdown,
+      synergyScore: synergy.synergyScore,
+      synergyLabel: synergy.synergyLabel
+    });
   }
 
   return results.sort((a, b) => b.matchPercent - a.matchPercent);

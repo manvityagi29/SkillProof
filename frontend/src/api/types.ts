@@ -69,6 +69,8 @@ export interface CandidateMatch {
   college: string | null;
   matchPercent: number;
   skillBreakdown: Array<{ skillName: string; verificationScore: number; isTeamGap: boolean }>;
+  synergyScore?: number;
+  synergyLabel?: string;
 }
 
 export interface ChallengePrompt {
