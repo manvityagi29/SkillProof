@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: proofstack
+    ports:
+      - '5432:5432'
+    volumes:
+      - proofstack_pg_data:/var/lib/postgresql/data
+
+volumes:
+  proofstack_pg_data:
