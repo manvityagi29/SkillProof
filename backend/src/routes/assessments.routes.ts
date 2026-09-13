@@ -88,5 +88,31 @@ router.post('/:skillId/submit', requireAuth, async (req, res) => {
   res.status(201).json({ score, correctCount, totalCount: answers.length, verification });
 });
 
+// POST /api/assessments/:skillId/cancel - cancel/disqualify assessment due to anti-cheating violation
+router.post('/:skillId/cancel', requireAuth, async (req, res) => {
+  const skillId = Number(req.params.skillId);
+  const { reason = 'Proctoring Violation: Tab switching detected during active session.', strikes = 2 } = req.body || {};
+
+  // Record disqualified attempt with 0 score
+  const resultInsert = await pool.query(
+    `INSERT INTO assessment_results (user_id, skill_id, score, correct_count, total_count)
+     VALUES ($1, $2, 0, 0, 0) RETURNING id, created_at`,
+    [req.user!.userId, skillId]
+  );
+
+  const attemptId = resultInsert.rows[0].id;
+  const createdAt = resultInsert.rows[0].created_at;
+
+  res.status(200).json({
+    cancelled: true,
+    disqualified: true,
+    attemptId,
+    reason,
+    strikes,
+    score: 0,
+    created_at: createdAt
+  });
+});
+
 export default router;
 

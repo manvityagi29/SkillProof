@@ -50,6 +50,21 @@ export function AssessmentsListPage() {
         </span>
       </div>
 
+      <div className="proctoring-banner">
+        <div style={{ display: 'grid', gridAutoFlow: 'column', gap: '8px', alignItems: 'center' }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          <span style={{ fontWeight: 700, fontSize: '12px', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+            Anti-Cheating Policy Active
+          </span>
+        </div>
+        <span style={{ fontSize: '12px', lineHeight: '1.4' }}>
+          All assessments are strictly proctored against browser tab switching. Navigating away or switching tabs during an active quiz will trigger a strike; repeated violations will instantly cancel and void your assessment.
+        </span>
+        <Badge tone="warning">Tab Switch Detection</Badge>
+      </div>
+
       {isLoading && <span className="text-subtle">Loading assessments…</span>}
 
       <div className="grid-2">

@@ -643,4 +643,64 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   to { transform: translateY(0); opacity: 1; }
 }
 
+/* ---------- Proctoring & Anti-Cheating Modals & Banners ---------- */
+.proctoring-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(5px);
+  display: grid;
+  place-items: center;
+  padding: var(--space-300);
+}
+.proctoring-modal {
+  background: var(--color-surface);
+  border-radius: var(--radius-large);
+  max-width: 540px;
+  width: 100%;
+  padding: var(--space-350);
+  display: grid;
+  gap: var(--space-200);
+  box-shadow: var(--shadow-overlay);
+  border: 2px solid var(--color-warning-bold);
+  animation: toastIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.proctoring-modal.danger {
+  border-color: var(--color-danger-bold);
+}
+.proctoring-banner {
+  background: #FFFBEB;
+  border: 1px solid #FCD34D;
+  border-radius: var(--radius-medium);
+  padding: var(--space-150) var(--space-200);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--space-150);
+  color: #92400E;
+}
+.proctoring-banner.active-warning {
+  background: #FEF2F2;
+  border-color: #F87171;
+  color: #991B1B;
+}
+.proctoring-audit-terminal {
+  background: #0B1220;
+  border: 1px solid #1E293B;
+  border-radius: var(--radius-medium);
+  padding: var(--space-150) var(--space-200);
+  font-family: 'SF Mono', Menlo, Monaco, Consolas, monospace;
+  font-size: var(--font-size-100);
+  color: #94A3B8;
+  display: grid;
+  gap: var(--space-050);
+}
+.proctoring-audit-row {
+  display: grid;
+  grid-template-columns: 90px 1fr;
+  gap: var(--space-100);
+  line-height: 1.5;
+}
+
 
