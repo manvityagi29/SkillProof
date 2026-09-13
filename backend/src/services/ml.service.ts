@@ -1,8 +1,11 @@
 import { spawn } from 'child_process';
 import path from 'path';
+import fs from 'fs';
 
-// Prefer Anaconda python3 where scikit-learn is installed, or fallback to system python3
-const PYTHON_BIN = process.env.PYTHON_BIN || '/opt/anaconda3/bin/python3';
+// Prefer explicit environment variable, then local Anaconda if present, else system python3
+const PYTHON_BIN =
+  process.env.PYTHON_BIN ||
+  (fs.existsSync('/opt/anaconda3/bin/python3') ? '/opt/anaconda3/bin/python3' : 'python3');
 
 const ML_DIR = path.resolve(__dirname, '../ml');
 
