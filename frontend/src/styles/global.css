@@ -459,3 +459,188 @@ input, textarea, select { font-family: inherit; font-size: inherit; }
   color: var(--color-brand-bold);
 }
 
+/* ---------- Sidebar Groups & Navigation Primitives ---------- */
+.sidebar-group {
+  display: grid;
+  gap: var(--space-025);
+  margin-bottom: var(--space-200);
+}
+.sidebar-group-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-subtlest);
+  padding: var(--space-050) var(--space-150);
+}
+.sidebar-icon {
+  width: 16px;
+  height: 16px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+}
+
+/* ---------- Verification Engine Centerpiece Panel ---------- */
+.verification-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-large);
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+@media (max-width: 960px) {
+  .verification-panel {
+    grid-template-columns: 1fr;
+  }
+}
+.score-hero-box {
+  padding: var(--space-300);
+  border-right: 1px solid var(--color-border);
+  display: grid;
+  gap: var(--space-200);
+  background: linear-gradient(180deg, rgba(37, 99, 235, 0.03) 0%, rgba(248, 250, 252, 0.9) 100%);
+  align-content: center;
+}
+@media (max-width: 960px) {
+  .score-hero-box {
+    border-right: none;
+    border-bottom: 1px solid var(--color-border);
+  }
+}
+.metrics-grid-stack {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--color-border);
+}
+@media (max-width: 768px) {
+  .metrics-grid-stack {
+    grid-template-columns: 1fr;
+  }
+}
+.metric-box-item {
+  background: var(--color-surface);
+  padding: var(--space-300);
+  display: grid;
+  gap: var(--space-100);
+  align-content: space-between;
+}
+
+/* ---------- High-Density Skill Data Table ---------- */
+.skill-data-table {
+  display: grid;
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+}
+.skill-data-header {
+  display: grid;
+  grid-template-columns: 190px 140px 1fr 140px 190px;
+  align-items: center;
+  gap: var(--space-150);
+  padding: var(--space-100) var(--space-200);
+  background: var(--color-surface-hovered);
+  font-size: var(--font-size-050);
+  font-weight: 700;
+  color: var(--color-text-subtlest);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.skill-data-row {
+  display: grid;
+  grid-template-columns: 190px 140px 1fr 140px 190px;
+  align-items: center;
+  gap: var(--space-150);
+  padding: var(--space-150) var(--space-200);
+  background: var(--color-surface);
+  transition: background 0.15s ease;
+}
+.skill-data-row:hover {
+  background: #F8FAFC;
+}
+@media (max-width: 960px) {
+  .skill-data-header {
+    display: none;
+  }
+  .skill-data-row {
+    grid-template-columns: 1fr;
+    gap: var(--space-100);
+    padding: var(--space-200);
+  }
+}
+
+/* ---------- 4-Step Verification Workflow Strip ---------- */
+.workflow-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1px;
+  background: var(--color-border);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-medium);
+  overflow: hidden;
+}
+@media (max-width: 800px) {
+  .workflow-strip {
+    grid-template-columns: 1fr;
+  }
+}
+.workflow-step {
+  background: var(--color-surface);
+  padding: var(--space-150) var(--space-200);
+  display: grid;
+  grid-template-columns: 24px 1fr;
+  gap: var(--space-100);
+  align-items: start;
+}
+
+/* ---------- Digital Passport Credential Card ---------- */
+.passport-credential-card {
+  background: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  color: #FFFFFF;
+  border-radius: var(--radius-large);
+  padding: var(--space-300);
+  display: grid;
+  gap: var(--space-200);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-hover);
+  border: 1px solid #334155;
+}
+
+/* ---------- Micro Interaction Toast ---------- */
+.toast-container {
+  position: fixed;
+  bottom: var(--space-300);
+  right: var(--space-300);
+  z-index: 1000;
+  display: grid;
+  gap: var(--space-100);
+  pointer-events: none;
+}
+.toast-item {
+  pointer-events: auto;
+  background: #0F172A;
+  color: #FFFFFF;
+  padding: var(--space-150) var(--space-200);
+  border-radius: var(--radius-medium);
+  box-shadow: var(--shadow-overlay);
+  font-size: var(--font-size-200);
+  font-weight: 600;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: var(--space-100);
+  border: 1px solid #334155;
+  animation: toastIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes toastIn {
+  from { transform: translateY(12px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+
