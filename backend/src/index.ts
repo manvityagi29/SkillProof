@@ -36,16 +36,24 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/jobs', jobsRoutes);
 
 
-// Central error handler — keeps a bad request from crashing a live demo
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err);
-  res.status(500).json({ error: 'Something went wrong on the server.' });
+  if ((err as any).code === 'ECONNREFUSED' || err.message?.includes('ECONNREFUSED')) {
+    return res.status(503).json({
+      error: 'Database Connection Required: The live cloud backend cannot reach a local database (localhost:5432). Please set the cloud DATABASE_URL in Vercel environment variables.'
+    });
+  }
+  res.status(500).json({ error: err.message || 'Something went wrong on the server.' });
 });
 
-const PORT = process.env.PORT || 4000;
-app.listen(PORT, () => {
-  console.log(`ProofStack backend running on http://localhost:${PORT}`);
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 4000;
+  app.listen(PORT, () => {
+    console.log(`ProofStack backend running on http://localhost:${PORT}`);
+  });
+}
+
+export default app;
 
 // Demo-day safety net: a single bad request or a dropped DB connection should
 // never take the whole server down mid-presentation. We still log loudly so
